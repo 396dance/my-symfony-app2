@@ -20,32 +20,54 @@ class HelloController extends AbstractController
      */
     public function index(Request $request)
     {
-        $encoder = array(new XmlEncoder());
-        $normalizers = array(new ObjectNormalizer());
-        $serializer = new Serializer($normalizers, $encoder);
-
-        $data = array(
-            'name' => array('first' => 'Taro', 'second' => 'Yamada'),
-            'age' => 36, 'mail' => 'taro@yamada.kun' 
+        $content = <<< EOM
+        <html><head><title>Hello</title><head>
+        <body><h1>Hello!<h1>
+        <p>this is Symfony sample page.</p>
+        </body></html>
+EOM;
+        $response = new Response(
+            $content,
+            Response::HTTP_OK,
+            array('content-type' => 'text/html')
         );
-
-        $response = new Response();
-        $response->headers->set('Content-Type','xml');
-        $result = $serializer->serialize($data, 'xml');
-        $response->setContent($result);
 
         return $response;
     }
 
     /**
-     * @Route("/other/{domain}", name="other")
+     * @Route("/notfound", name="notfound")
      */
-    public function other(Request $request, $domain="")
+    public function notfound(Request $request)
     {
-        if ($domain == "") {
-            return $this->redirect('/hello');
-        } else {
-            return new RedirectResponse("http://{$domain}.com");
-        };
+        $content = <<< EOM
+        <html><head><title>ERROR</title><head>
+        <body><h1>ERROR 404!<h1>
+        </body></html>
+EOM;
+        $response = new Response(
+            $content,
+            Response::HTTP_NOT_FOUND,
+            array('content-type' => 'text/html')
+        );
+        return $response;
+    }
+
+    /**
+     * @Route("/error", name="error")
+     */
+    public function error(Request $request)
+    {
+        $content = <<< EOM
+        <html><head><title>ERROR</title><head>
+        <body><h1>ERROR 500!<h1>
+        </body></html>
+EOM;
+        $response = new Response(
+            $content,
+            Response::HTTP_INTERNAL_SERVER_ERROR,
+            array('content-type' => 'text/html')
+        );
+        return $response;
     }
 }
