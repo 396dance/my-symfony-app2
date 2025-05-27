@@ -8,3 +8,7 @@ URL に「http://127.0.0.1:8000/hello?name=hanako&pass=flower」を入力し確�
 
 P47 2 つのリダイレクト方法の確認
 P48 に記載されている通り、リダイレクトは redirect メソッドでもできるし、RedirectResponse クラスを使っても実現可能
+
+### 2025 年 5 月 27 日時点
+
+P49 JSON を送信する

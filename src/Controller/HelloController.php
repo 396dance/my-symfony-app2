@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -15,16 +16,12 @@ class HelloController extends AbstractController
      */
     public function index(Request $request)
     {
-        $name = $request->get('name');
-        $path = $request->get('pass');
-        $result = '<html><body><ol>';
-        $result .= '<h1>Parameter</h1>';
-        $result .= '<p>this is index page.</p>';
-        $result .= '<p>name: '. $name.'</p>';
-        $result .= '<p>path: '. $path.'</p>';
-        $result .= '</body><html>';
-        
-        return new Response($result);
+        $data = array(
+            'name' => array('first' => 'Taro', 'second' => 'Yamada'),
+            'age' => 36, 'mail' => 'taro@yamada.kun' 
+        );
+
+        return new JsonResponse($data);
     }
 
     /**
