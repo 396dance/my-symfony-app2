@@ -9,6 +9,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+
 class HelloController extends AbstractController
 {
     /**
@@ -16,12 +20,21 @@ class HelloController extends AbstractController
      */
     public function index(Request $request)
     {
+        $encoder = array(new XmlEncoder());
+        $normalizers = array(new ObjectNormalizer());
+        $serializer = new Serializer($normalizers, $encoder);
+
         $data = array(
             'name' => array('first' => 'Taro', 'second' => 'Yamada'),
             'age' => 36, 'mail' => 'taro@yamada.kun' 
         );
 
-        return new JsonResponse($data);
+        $response = new Response();
+        $response->headers->set('Content-Type','xml');
+        $result = $serializer->serialize($data, 'xml');
+        $response->setContent($result);
+
+        return $response;
     }
 
     /**
