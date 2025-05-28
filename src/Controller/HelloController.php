@@ -17,27 +17,31 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 class HelloController extends AbstractController
 {
     /**
-     * @Route("/hello/{msg}", name="hello")
+     * @Route("/hello", name="hello")
      */
-    public function index($msg="Hello!")
+    public function index(Request $request)
     {
+        if ($request->getMethod() == 'POST') {
+            $input = $request->request->get('input');
+            $msg = 'こんにちは、'. $input. 'さん！';
+        } else {
+            $msg = 'お名前は？';
+        }
         return $this->render('hello/index.html.twig',
-        ['controller' => 'HelloController',
-         'action' => 'index',
-         'prev_action' => '(none)',
+        ['title' => 'Hello',
          'message' => $msg,
     ]);
     }
 
     /**
-     * @Route("/other/{action}/{msg}", name="other")
+     * @Route("/other", name="other")
      */
-    public function other($action,$msg)
+    public function other(Request $request)
     {
+        $input = $request->request->get('input');
+        $msg = 'こんにちは、'. $input. 'さん！';
         return $this->render('hello/index.html.twig',
-        ['controller' => 'HelloController',
-         'action' => 'other',
-         'prev_action' => $action,
+        ['title' => 'Hello',
          'message' => $msg,
     ]);
     }
