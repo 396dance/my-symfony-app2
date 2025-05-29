@@ -2,17 +2,14 @@
 
 namespace App\Controller;
 
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+
+
 
 class HelloController extends AbstractController
 {
@@ -21,15 +18,22 @@ class HelloController extends AbstractController
      */
     public function index(Request $request)
     {
+        $form = $this->createFormBuilder()
+        ->add('input', TextType::class)
+        ->add('save', SubmitType::class, ['label' => 'Click'])
+        ->getForm();
+
         if ($request->getMethod() == 'POST') {
-            $input = $request->request->get('input');
-            $msg = 'こんにちは、'. $input. 'さん！';
+            $form->handleRequest($request);
+            $msg = 'こんにちは、'.$form->get('input')->getData() . 'さん！';
         } else {
-            $msg = 'お名前は？';
+            $msg = 'お名前をどうぞ！';
         }
+        // phpinfo();
         return $this->render('hello/index.html.twig',
         ['title' => 'Hello',
          'message' => $msg,
+         'form' => $form->createView(),
     ]);
     }
 
